@@ -1,23 +1,55 @@
+
 'use strict';
 
 const { Router } = require('express');
+
 const authController = require('../controllers/authController');
 const authService = require('../services/authService');
+
 const { authenticate } = require('../middleware/authenticate');
 const { authorize, ROLES } = require('../middleware/authorize');
-const { loginSchema, otpSchema, forgotPasswordSchema, resetPasswordSchema, transferSuperAdminSchema } = require('../validators/authValidators');
-const { validateBody, required, isEmail, isOneOf, all } = require('../validators/validate');
+
+const {
+  loginSchema,
+  otpSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  transferSuperAdminSchema
+} = require('../validators/authValidators');
+
+const {
+  validateBody,
+  required,
+  isEmail,
+  isOneOf,
+  all
+} = require('../validators/validate');
 
 const router = Router();
 
-router.post('/login', loginSchema, authService.login);
+router.post('/login', loginSchema, authController.login);
+
 router.post('/verify-otp', otpSchema, authService.verifyOtp);
+
 router.get('/me', authenticate, authService.me);
 
 // Password reset (public endpoints)
-router.post('/forgot-password', forgotPasswordSchema, authController.requestPasswordReset);
-router.post('/reset-password', resetPasswordSchema, authController.resetPassword);
-router.get('/verify-reset-token', authController.verifyResetToken);
+router.post(
+  '/forgot-password',
+  forgotPasswordSchema,
+  authController.requestPasswordReset
+);
+
+router.post(
+  '/reset-password',
+  resetPasswordSchema,
+  authController.resetPassword
+);
+
+router.get(
+  '/verify-reset-token',
+  authController.verifyResetToken
+);
 
 const createAccountSchema = validateBody({
   email: all(required('Email'), isEmail('Email')),
@@ -43,3 +75,4 @@ router.post(
 );
 
 module.exports = router;
+
