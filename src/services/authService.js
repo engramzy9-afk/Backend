@@ -1,4 +1,3 @@
-
 'use strict';
 
 const bcrypt = require('bcryptjs');
@@ -141,6 +140,7 @@ async function login({ email, password, deviceToken, ipAddress }) {
     token: signJwt(account),
     user: toPublicAccount(account)
   };
+}
 
 async function verifyOtp({
   email,
@@ -587,4 +587,3 @@ module.exports = {
   activateAccount,
   verifyActivationToken
 };
-
